@@ -11,5 +11,10 @@
     "url": "git@gitlab.personal.com:bug-predators/jwt-auth.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  }
 }
