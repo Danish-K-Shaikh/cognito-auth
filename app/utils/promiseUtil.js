@@ -1,4 +1,4 @@
-const promisyCallback = function (callback, obj, ...params) {
+const promisyCallback = function (callback, ...params) {
   let resolve, reject;
   const promise = new Promise((res, rej) => ((resolve = res), (reject = rej)));
 
@@ -8,9 +8,7 @@ const promisyCallback = function (callback, obj, ...params) {
     resolve(done);
   });
 
-  if (obj && typeof obj[callback] === "function") {
-    obj[callback](...params);
-  } else if (typeof callback === "function") {
+  if (typeof callback === 'function') {
     callback(...params);
   }
 
