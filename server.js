@@ -3,9 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-const controller = require('./controller/index');
+const controller = require('./app/controller/index');
 
 app.use(express.json());
 app.use('/', controller);
