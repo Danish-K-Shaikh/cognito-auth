@@ -1,4 +1,4 @@
-const promisyCallback = function (callback, ...params) {
+const promisifyCallback = function (callback, ...params) {
   let resolve, reject;
   const promise = new Promise((res, rej) => ((resolve = res), (reject = rej)));
 
@@ -15,4 +15,4 @@ const promisyCallback = function (callback, ...params) {
   return promise;
 };
 
-exports.promisyCallback = promisyCallback;
+exports.promisifyCallback = promisifyCallback;
