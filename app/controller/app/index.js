@@ -3,29 +3,34 @@ const authenticationService = require('../../services/authenticate');
 const userService = require('../../services/user');
 const { getErrorPayload } = require('../../utils/errorUtil');
 
-router.post('/login', async function (req, res) {
+async function onSignIn(req, res) {
   try {
-    const { username, password } = req.body;
-    let user = await userService.validateUserPassword(username, password);
+    const { userId, password } = req.body;
+    let user = await userService.validateUserPassword({ userId, password });
 
-    const token = authenticationService.generateToken({
-      username,
-      posts: user.posts,
-    });
-
-    const refreshToken = authenticationService.generateRefreshToken({
-      username,
-      posts: user.posts,
-    });
+    const token = authenticationService.generateToken(user);
+    const refreshToken = authenticationService.generateRefreshToken(user);
 
     res.json({ access_token: token, refresh_token: refreshToken });
   } catch (e) {
     const { status, ...rest } = getErrorPayload(e, 401);
     res.status(status).json({ ...rest });
   }
-});
+}
 
-router.post('/refresh-token', async function (req, res) {
+async function onSignup(req, res) {
+  try {
+    const body = req.body;
+    const newUser = await userService.signupUser(body);
+    delete newUser.password;
+    res.status(201).json({ data: newUser });
+  } catch (error) {
+    const { status, ...rest } = getErrorPayload(error, 401);
+    res.status(status).json({ ...rest });
+  }
+}
+
+async function refreshToken(req, res) {
   try {
     const refreshToken = req.headers['token'];
     const result = await authenticationService.validateRefreshToken(refreshToken);
@@ -37,6 +42,10 @@ router.post('/refresh-token', async function (req, res) {
     const { status, ...rest } = getErrorPayload(error, 401);
     res.status(status).json({ ...rest });
   }
-});
+}
+
+router.post('/login', onSignIn);
+router.post('/signup', onSignup);
+router.post('/refresh-token', refreshToken);
 
 module.exports = router;

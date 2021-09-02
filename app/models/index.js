@@ -4,6 +4,6 @@ const userSchema = require('./user');
 const postSchema = require('./post');
 
 module.exports = {
-  users: Mongoose.model('User', userSchema),
-  posts: Mongoose.model('Post', postSchema),
+  User: Mongoose.model('User', userSchema),
+  Post: Mongoose.model('Post', postSchema),
 };
