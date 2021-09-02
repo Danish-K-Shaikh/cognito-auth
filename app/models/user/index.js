@@ -4,7 +4,7 @@ const { promisifyCallback } = require('../../utils/promiseUtil');
 
 const Schema = Mongoose.Schema;
 
-const SALT_WORK_FACTOR = process.env.SALT_WORK_FACTOR;
+const SALT_WORK_FACTOR = Number(process.env.SALT_WORK_FACTOR);
 
 const userSchema = new Schema({
   email: {
