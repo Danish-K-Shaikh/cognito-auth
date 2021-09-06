@@ -14,10 +14,6 @@ const userSchema = new Schema({
     trim: true,
     lowercase: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     trim: true,
@@ -30,30 +26,30 @@ const userSchema = new Schema({
   },
 });
 
-async function preSaveHasPassword(next) {
-  var user = this;
-  // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) return next();
+// async function preSaveHasPassword(next) {
+//   var user = this;
+//   // only hash the password if it has been modified (or is new)
+//   if (!user.isModified('password')) return next();
 
-  // generate a salt
-  try {
-    const salt = await promisifyCallback(bcrypt.genSalt, SALT_WORK_FACTOR);
-    const hash = await promisifyCallback(bcrypt.hash, user.password, salt);
+//   // generate a salt
+//   try {
+//     const salt = await promisifyCallback(bcrypt.genSalt, SALT_WORK_FACTOR);
+//     const hash = await promisifyCallback(bcrypt.hash, user.password, salt);
 
-    user.password = hash;
+//     user.password = hash;
 
-    next();
-  } catch (err) {
-    next(err);
-  }
-}
+//     next();
+//   } catch (err) {
+//     next(err);
+//   }
+// }
 
-function comparePassword(candidatePassword) {
-  return promisifyCallback(bcrypt.compare, candidatePassword, this.password);
-}
+// function comparePassword(candidatePassword) {
+//   return promisifyCallback(bcrypt.compare, candidatePassword, this.password);
+// }
 
-userSchema.pre('save', preSaveHasPassword);
+// userSchema.pre('save', preSaveHasPassword);
 
-userSchema.methods.comparePassword = comparePassword;
+// userSchema.methods.comparePassword = comparePassword;
 
 module.exports = userSchema;
