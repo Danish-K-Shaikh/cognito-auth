@@ -11,7 +11,7 @@ async function onSignIn(req, res) {
     const token = authenticationService.generateToken(user);
     const refreshToken = authenticationService.generateRefreshToken(user);
 
-    res.json({ access_token: token, refresh_token: refreshToken });
+    res.json({ token, refreshToken });
   } catch (e) {
     const { status, ...rest } = getErrorPayload(e, 401);
     res.status(status).json({ ...rest });
@@ -44,8 +44,34 @@ async function refreshToken(req, res) {
   }
 }
 
+async function verifySignUp(req, res) {
+  try {
+    const { code, userId } = req.body;
+    if (!code || !userId) return res.status(422).json({ msg: 'code and userId is required' });
+    await userService.verifyUserSignup({ code, userId });
+    res.json({ msg: 'Account verified' });
+  } catch (error) {
+    const { status, ...rest } = getErrorPayload(error, 401);
+    res.status(status).json({ ...rest });
+  }
+}
+
+async function resendVerificationCode(req, res) {
+  try {
+    const { userId } = req.body;
+    await userService.resendVerification(userId);
+    res.json({ msg: 'Verification code sent' });
+  } catch (error) {
+    console.log({ error });
+    const { status, ...rest } = getErrorPayload(error, 401);
+    res.status(status).json({ ...rest });
+  }
+}
+
 router.post('/login', onSignIn);
 router.post('/signup', onSignup);
 router.post('/refresh-token', refreshToken);
+router.post('/signup/verify', verifySignUp);
+router.post('/resend/verification', resendVerificationCode);
 
 module.exports = router;
